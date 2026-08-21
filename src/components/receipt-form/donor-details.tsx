@@ -59,9 +59,14 @@ export function DonorDetails({ register, errors }: DonorDetailsProps) {
         <input
           id="donorPan"
           type="text"
-          {...register('donorPan')}
+          {...register('donorPan', {
+            onChange: (e) => {
+              e.target.value = e.target.value.toUpperCase();
+            },
+          })}
           placeholder="e.g., ABCDE1234F"
           maxLength={10}
+          style={{ textTransform: 'uppercase' }}
           className={`w-full px-4 py-3 border rounded-xl text-slate-800 placeholder:text-slate-400 bg-slate-50/50 focus:bg-white transition-all uppercase ${
             errors.donorPan ? 'border-red-300 bg-red-50/30' : 'border-slate-200'
           }`}
