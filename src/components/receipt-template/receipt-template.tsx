@@ -293,7 +293,7 @@ export function ReceiptTemplate({ receipt, config }: ReceiptTemplateProps) {
           </div>
         )}
 
-        {/* Signature Area */}
+        {/* Signature Area with Stamp */}
         <div
           style={{
             display: 'flex',
@@ -303,27 +303,80 @@ export function ReceiptTemplate({ receipt, config }: ReceiptTemplateProps) {
             paddingTop: '24px',
           }}
         >
-          <div style={{ textAlign: 'center', width: '180px' }}>
+          {/* Stamp Container */}
+          <div
+            style={{
+              position: 'relative',
+              width: '220px',
+              textAlign: 'center',
+            }}
+          >
+            {/* The Stamp Overlay */}
             <div
               style={{
-                width: '180px',
-                borderBottom: '1px dashed #94a3b8',
-                marginBottom: '8px',
-                height: '60px',
-                display: 'flex',
-                alignItems: 'flex-end',
-                justifyContent: 'center'
+                position: 'relative',
+                border: '3px solid #1a237e',
+                borderRadius: '6px',
+                padding: '12px 16px',
+                transform: 'rotate(-4deg)',
+                opacity: 0.85,
               }}
             >
-              {activeConfig.signatureUrl && (
-                <img 
-                  src={activeConfig.signatureUrl} 
-                  alt="Authorized Signature"
-                  style={{ maxHeight: '55px', maxWidth: '160px', objectFit: 'contain' }}
-                />
-              )}
+              {/* Stamp Top Text */}
+              <p
+                style={{
+                  fontSize: '12px',
+                  fontWeight: '900',
+                  color: '#1a237e',
+                  letterSpacing: '1.5px',
+                  margin: '0 0 6px 0',
+                  textTransform: 'uppercase',
+                  fontFamily: "'Arial Black', 'Impact', sans-serif",
+                }}
+              >
+                JEEVANKRITI FOUNDATION
+              </p>
+
+              {/* Signature in the middle of stamp */}
+              <div
+                style={{
+                  height: '55px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '4px 0',
+                }}
+              >
+                {activeConfig.signatureUrl && (
+                  <img
+                    src={activeConfig.signatureUrl}
+                    alt="Authorized Signature"
+                    style={{
+                      maxHeight: '50px',
+                      maxWidth: '160px',
+                      objectFit: 'contain',
+                      transform: 'rotate(4deg)',
+                    }}
+                  />
+                )}
+              </div>
+
+              {/* Stamp Bottom Text */}
+              <p
+                style={{
+                  fontSize: '11px',
+                  fontWeight: '800',
+                  color: '#1a237e',
+                  margin: '6px 0 0 0',
+                  fontFamily: "'Arial Black', 'Impact', sans-serif",
+                }}
+              >
+                Auth. Sign./ Director
+              </p>
             </div>
-            <p style={{ fontSize: '11px', color: '#64748b', margin: 0 }}>
+
+            {/* Label below stamp */}
+            <p style={{ fontSize: '11px', color: '#64748b', margin: '12px 0 0 0' }}>
               For {activeConfig.name}
             </p>
             <p style={{ fontSize: '10px', color: '#94a3b8', margin: '2px 0 0 0' }}>

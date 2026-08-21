@@ -207,7 +207,7 @@ export default function LoginPage() {
       {/* Admin/Staff Floating Switcher (Logo Button) */}
       <button
         onClick={() => setIsAdmin(!isAdmin)}
-        className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-xl shadow-black/10 border-2 border-emerald-100 hover:scale-105 transition-transform duration-200 group"
+        className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-xl shadow-black/10 border-2 border-emerald-100 hover:scale-105 transition-transform duration-200 group overflow-hidden"
         title={isAdmin ? "Switch to Staff Login" : "Switch to Admin Login"}
       >
         <Image
@@ -215,7 +215,7 @@ export default function LoginPage() {
           alt="Switch Login"
           width={40}
           height={40}
-          className="object-contain drop-shadow-sm"
+          className="object-contain drop-shadow-sm m-auto"
         />
         
         {/* Tooltip on hover */}
