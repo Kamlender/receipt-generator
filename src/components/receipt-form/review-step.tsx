@@ -84,7 +84,7 @@ export function ReviewStep({ getValues, onGoToStep, isSubmitting }: ReviewStepPr
       <ReviewSection title="Donor Details" editStep={0} onEdit={onGoToStep}>
         <ReviewRow label="Name" value={values.donorName} />
         <ReviewRow label="Address" value={values.donorAddress} />
-        <ReviewRow label="PAN" value={values.donorPan} />
+        <ReviewRow label="PAN" value={values.donorPan?.toUpperCase()} />
         <ReviewRow label="Phone" value={values.donorContact} />
         <ReviewRow label="Email" value={values.donorEmail} />
       </ReviewSection>
