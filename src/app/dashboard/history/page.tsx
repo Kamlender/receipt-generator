@@ -157,6 +157,25 @@ export default function DonationHistoryPage() {
     toast.success('CSV exported successfully!');
   }
 
+  // Auto-trigger export if URL has ?export=csv
+  useEffect(() => {
+    if (!loading && typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('export') === 'csv') {
+        // Small delay to ensure filteredReceipts is ready
+        setTimeout(() => {
+          if (filteredReceipts.length > 0) {
+            handleExportCSV();
+          } else {
+            toast.error('No receipts to export.');
+          }
+          // Clean URL
+          window.history.replaceState({}, '', window.location.pathname);
+        }, 300);
+      }
+    }
+  }, [loading, filteredReceipts.length]);
+
   return (
     <AdminLayout pageTitle="Donation history">
       {/* Stats Cards */}
