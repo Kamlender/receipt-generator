@@ -1,0 +1,85 @@
+/* Custom Receipt v2 Styles */
+.receipt-v2-container {
+  position: relative;
+  background-color: white;
+  width: 100%;
+  max-width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  padding: 10mm;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  color: #1e293b;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Diagonal Watermark */
+.receipt-v2-watermark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='24' fill='%23e2e8f0' transform='rotate(-35, 300, 300)' opacity='0.8'>JEEVANKRITI FOUNDATION</text></svg>");
+  background-repeat: repeat;
+  background-size: 400px 400px;
+}
+
+/* Double Border Container */
+.receipt-v2-border-outer {
+  position: relative;
+  z-index: 2;
+  border: 4px solid #1e3a8a; /* Dark Blue */
+  border-radius: 2px;
+  padding: 4px;
+  height: 100%;
+  min-height: calc(297mm - 20mm);
+}
+
+.receipt-v2-border-inner {
+  border: 2px solid #eab308; /* Gold/Yellow */
+  border-radius: 1px;
+  padding: 30px 40px;
+  height: 100%;
+  min-height: calc(297mm - 20mm - 12px);
+  box-sizing: border-box;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Print Overrides */
+@media print {
+  .receipt-v2-container {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 297mm !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    /* Ensure colors print */
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .receipt-v2-border-outer {
+    min-height: 295mm !important;
+    border: 3px solid #1e3a8a !important; /* Slightly thinner for print to fit */
+    padding: 3px !important;
+  }
+
+  .receipt-v2-border-inner {
+    padding: 10mm 15mm !important;
+    min-height: calc(295mm - 12px) !important;
+    border: 1px solid #eab308 !important;
+  }
+
+  /* Force background images to print for the watermark */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

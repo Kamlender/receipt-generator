@@ -10,15 +10,15 @@ import { NGOConfig } from '@/types/receipt';
 
 export const NGO_CONFIG: NGOConfig = {
   name: 'JEEVANKRITI FOUNDATION',
-  address: 'To Be Provided',
-  pan: 'XXXXX0000X',
-  registration80G: '80G Registration No: [ To Be Provided ] | Valid from: [ Date ] to [ Date ]',
-  registrationNumber: 'To Be Provided',
-  contactPhone: '+91-XXXXXXXXXX',
-  contactEmail: 'contact@jeevankritifoundation.org',
-  website: 'www.jeevankritifoundation.org',
+  address: 'Faridabad, Haryana - 121001, India',
+  pan: 'AAHCJ4905D',
+  registration80G: '80G Registration No.: AAHCJ4905DF20261, valid AY 2022-23 to AY 2026-27.',
+  registrationNumber: 'Reg. No. U88900HR2026NPL147259',
+  contactPhone: '+91 8595232367',
+  contactEmail: 'writetous@jeevankriti.org',
+  website: 'www.jeevankriti.org',
   logoUrl: '/logo.png', // Place logo.png in the /public folder
-  signatureUrl: '',
+  signatureUrl: '', // Using cursive font as fallback
 };
 
 /** Receipt number prefix */
