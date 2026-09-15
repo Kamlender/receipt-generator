@@ -221,7 +221,6 @@ export default function UsersPage() {
                   <th>User</th>
                   <th>Status</th>
                   <th>Last login</th>
-                  <th>Set new password</th>
                 </tr>
               </thead>
               <tbody>
@@ -232,23 +231,8 @@ export default function UsersPage() {
                     <div className="user-cell-role">Administrator</div>
                   </td>
                   <td><span className="user-status-active">Active</span></td>
-                  <td className="history-date">DD-MM-YYYY</td>
-                  <td>
-                    <div className="user-pw-row">
-                      <input
-                        type="password"
-                        placeholder="New password"
-                        value={newPasswords['admin'] || ''}
-                        onChange={(e) => setNewPasswords((prev) => ({ ...prev, admin: e.target.value }))}
-                        className="form-input user-pw-input"
-                      />
-                      <button
-                        onClick={() => handleSetPassword('admin')}
-                        className="action-btn action-delete user-pw-set-btn"
-                      >
-                        Set
-                      </button>
-                    </div>
+                  <td className="history-date">
+                    {user?.metadata?.lastSignInTime ? formatDate(user.metadata.lastSignInTime) : 'N/A'}
                   </td>
                 </tr>
                 {/* Dynamic users */}
@@ -259,24 +243,7 @@ export default function UsersPage() {
                       <div className="user-cell-role">{u.role}</div>
                     </td>
                     <td><span className="user-status-active">{u.status}</span></td>
-                    <td className="history-date">{u.lastLogin ? formatDate(u.lastLogin) : 'DD-MM-YYYY'}</td>
-                    <td>
-                      <div className="user-pw-row">
-                        <input
-                          type="password"
-                          placeholder="New password"
-                          value={newPasswords[u.id] || ''}
-                          onChange={(e) => setNewPasswords((prev) => ({ ...prev, [u.id]: e.target.value }))}
-                          className="form-input user-pw-input"
-                        />
-                        <button
-                          onClick={() => handleSetPassword(u.id)}
-                          className="action-btn action-delete user-pw-set-btn"
-                        >
-                          Set
-                        </button>
-                      </div>
-                    </td>
+                    <td className="history-date">{u.lastLogin ? formatDate(u.lastLogin) : 'N/A'}</td>
                   </tr>
                 ))}
               </tbody>
