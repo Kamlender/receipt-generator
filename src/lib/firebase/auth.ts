@@ -12,7 +12,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from './config';
 
 // The admin email that is always allowed (not stored in panel_users)
-const ADMIN_EMAIL = 'admin@jeevankriti.org';
+const ADMIN_EMAIL = 'jeevanta.org@gmail.com';
 
 /**
  * Sign in with email and password.

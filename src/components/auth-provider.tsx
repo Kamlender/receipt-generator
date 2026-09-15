@@ -22,7 +22,7 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 const INACTIVITY_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
-const ADMIN_EMAIL = 'admin@jeevankriti.org';
+const ADMIN_EMAIL = 'jeevanta.org@gmail.com';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
