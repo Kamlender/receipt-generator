@@ -18,7 +18,7 @@ export const NGO_CONFIG: NGOConfig = {
   contactEmail: 'writetous@jeevankriti.org',
   website: 'www.jeevankriti.org',
   logoUrl: '/logo.png', // Place logo.png in the /public folder
-  signatureUrl: '', // Using cursive font as fallback
+  signatureUrl: '/signature.jpg', // Using uploaded signature
 };
 
 /** Receipt number prefix */
