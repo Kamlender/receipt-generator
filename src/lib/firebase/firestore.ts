@@ -195,13 +195,16 @@ export async function getNGOSettings(): Promise<NGOConfig> {
   const settingsSnap = await getDoc(settingsRef);
 
   if (!settingsSnap.exists()) {
-    return { ...DEFAULT_NGO_CONFIG, signatureUrl: '' }; // Add default empty signature
+    return { ...DEFAULT_NGO_CONFIG };
   }
 
   // Merge db settings over defaults to ensure no missing fields
+  const dbData = settingsSnap.data();
   return {
     ...DEFAULT_NGO_CONFIG,
-    ...settingsSnap.data()
+    ...dbData,
+    // Ensure signatureUrl falls back to default if not set in Firestore
+    signatureUrl: dbData.signatureUrl || DEFAULT_NGO_CONFIG.signatureUrl,
   } as NGOConfig;
 }
 
