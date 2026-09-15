@@ -14,7 +14,7 @@ export default function Home() {
   useEffect(() => {
     if (!loading) {
       if (user) {
-        router.replace('/receipts/new');
+        router.replace('/dashboard/new');
       } else {
         router.replace('/login');
       }

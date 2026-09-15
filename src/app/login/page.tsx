@@ -21,7 +21,7 @@ export default function LoginPage() {
   // If already logged in, redirect to receipt form
   useEffect(() => {
     if (!authLoading && user) {
-      router.replace('/receipts/new');
+      router.replace('/dashboard/new');
     }
   }, [user, authLoading, router]);
 
@@ -40,7 +40,7 @@ export default function LoginPage() {
 
     try {
       await signIn(trimmedEmail, password);
-      router.push('/receipts/new');
+      router.push('/dashboard/new');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {

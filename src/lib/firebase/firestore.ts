@@ -10,9 +10,15 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   setDoc,
+  deleteDoc,
+  updateDoc,
   runTransaction,
   serverTimestamp,
+  query,
+  orderBy,
+  where,
   Timestamp,
 } from 'firebase/firestore';
 import { db } from './config';
@@ -205,4 +211,68 @@ export async function getNGOSettings(): Promise<NGOConfig> {
 export async function saveNGOSettings(settings: NGOConfig): Promise<void> {
   const settingsRef = doc(db, SETTINGS_COLLECTION, NGO_CONFIG_DOC_ID);
   await setDoc(settingsRef, settings, { merge: true });
+}
+
+// ============================================================
+// Receipt List / Delete / Update Operations
+// ============================================================
+
+/**
+ * Fetch all receipts, ordered by creation date (newest first).
+ */
+export async function getAllReceipts(): Promise<Receipt[]> {
+  const q = query(
+    collection(db, RECEIPTS_COLLECTION),
+    orderBy('createdAtTimestamp', 'desc')
+  );
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((docSnap) => {
+    const data = docSnap.data();
+    return {
+      id: docSnap.id,
+      receiptNumber: data.receiptNumber,
+      donorName: data.donorName,
+      donorAddress: data.donorAddress || '',
+      donorPan: data.donorPan || '',
+      donorContact: data.donorContact || '',
+      donorEmail: data.donorEmail || '',
+      amount: data.amount,
+      amountInWords: data.amountInWords || '',
+      donationDate: data.donationDate,
+      purpose: data.purpose || '',
+      paymentMode: data.paymentMode,
+      paymentReference: data.paymentReference || '',
+      status: data.status || 'ISSUED',
+      createdBy: data.createdBy,
+      createdAt: data.createdAt,
+    } satisfies Receipt;
+  });
+}
+
+/**
+ * Delete a receipt by its Firestore document ID.
+ */
+export async function deleteReceipt(receiptId: string): Promise<void> {
+  const receiptRef = doc(db, RECEIPTS_COLLECTION, receiptId);
+  await deleteDoc(receiptRef);
+}
+
+/**
+ * Update a receipt by its Firestore document ID.
+ */
+export async function updateReceipt(
+  receiptId: string,
+  data: Partial<ReceiptFormData>
+): Promise<void> {
+  const receiptRef = doc(db, RECEIPTS_COLLECTION, receiptId);
+
+  const updateData: Record<string, unknown> = { ...data };
+
+  // Recalculate amount in words if amount changed
+  if (data.amount !== undefined) {
+    updateData.amountInWords = amountToWords(data.amount);
+  }
+
+  await updateDoc(receiptRef, updateData);
 }
