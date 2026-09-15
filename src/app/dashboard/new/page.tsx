@@ -92,12 +92,6 @@ export default function NewDonationPage() {
       return;
     }
 
-    // ── TEMPORARILY DISABLED ──
-    // Receipt generation is disabled. Will be re-enabled with a new receipt page.
-    toast('Receipt generation is temporarily disabled. Coming soon!', { icon: '🚧' });
-    return;
-
-    /* ── ORIGINAL CODE (uncomment when new receipt page is ready) ──
     setLoading(true);
     try {
       await initializeSequence();
@@ -126,7 +120,6 @@ export default function NewDonationPage() {
     } finally {
       setLoading(false);
     }
-    */
   }
 
   return (

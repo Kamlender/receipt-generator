@@ -10,7 +10,7 @@ export type ReceiptStatus = 'ISSUED';
 
 /** Payment mode display labels */
 export const PAYMENT_MODE_LABELS: Record<PaymentMode, string> = {
-  UPI: 'UPI',
+  UPI: 'Online/UPI',
   BANK_TRANSFER: 'Bank Transfer (NEFT/RTGS/IMPS)',
   CHEQUE: 'Cheque',
   CASH: 'Cash',

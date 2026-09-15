@@ -3,7 +3,7 @@
 import { Receipt, NGOConfig } from '@/types/receipt';
 import { NGO_CONFIG as DEFAULT_NGO_CONFIG } from '@/config/ngo-config';
 import { PAYMENT_MODE_LABELS } from '@/types/receipt';
-import { formatAmountIndian } from '@/lib/amount-to-words';
+import { amountToWords } from '@/lib/amount-to-words';
 
 interface ReceiptTemplateProps {
   receipt: Receipt;
@@ -18,12 +18,10 @@ export function ReceiptTemplate({ receipt, config }: ReceiptTemplateProps) {
     year: 'numeric',
   }).replace(/\//g, '-'); // e.g., 15-09-2026
 
-  const amountInWords = formatAmountIndian(receipt.amount);
+  const amountInWordsStr = amountToWords(receipt.amount);
   
-  // Custom format for currency
-  const formattedAmount = new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
+  // Custom format for currency — add space after ₹ to match image
+  const formattedAmount = '₹ ' + new Intl.NumberFormat('en-IN', {
     maximumFractionDigits: 0
   }).format(receipt.amount) + '/-';
 
@@ -83,7 +81,7 @@ export function ReceiptTemplate({ receipt, config }: ReceiptTemplateProps) {
           <div className="mb-6 px-4 text-[15px] leading-relaxed text-gray-700">
             Received with sincere gratitude from <strong className="text-black font-semibold">{receipt.donorName}</strong> a donation of <strong className="text-black font-semibold">{formattedAmount}</strong> towards <strong className="text-black font-semibold">{receipt.purpose}</strong> of JEEVANKRITI FOUNDATION, by {PAYMENT_MODE_LABELS[receipt.paymentMode]}.
             <div className="italic text-gray-600 mt-2 font-medium">
-              Rupees {amountInWords} Only
+              {amountInWordsStr}
             </div>
           </div>
 
@@ -147,9 +145,10 @@ export function ReceiptTemplate({ receipt, config }: ReceiptTemplateProps) {
               <p className="text-[10px] font-bold tracking-[0.2em] text-[#1e3a8a]">DONOR SIGNATURE</p>
             </div>
             <div className="w-56 text-center flex flex-col items-center">
-              <p className="text-[10px] font-bold mb-2">For JEEVANKRITI FOUNDATION</p>
+              <p className="text-[10px] font-bold mb-1">For JEEVANKRITI FOUNDATION</p>
+              <p className="text-[11px] font-bold text-[#1e3a8a] italic mb-1" style={{ fontFamily: "'Georgia', 'Times New Roman', serif" }}>JEEVANKRITI FOUNDATION</p>
               {activeConfig.signatureUrl ? (
-                <div className="h-10 flex items-center justify-center mb-1">
+                <div className="h-10 flex items-center justify-center mb-0.5">
                   <img 
                     src={activeConfig.signatureUrl} 
                     alt="Signature" 
@@ -164,9 +163,9 @@ export function ReceiptTemplate({ receipt, config }: ReceiptTemplateProps) {
                   Prince Kumar
                 </div>
               )}
+              <p className="text-[9px] text-[#1e3a8a] font-semibold italic mb-1">Auth. Sign. / Director</p>
               <div className="border-t border-gray-400 pt-2 w-full text-center mt-1">
-                <p className="text-[10px] font-bold tracking-[0.2em] text-[#1e3a8a] mb-0.5">AUTHORISED SIGNATORY</p>
-                <p className="text-[9px] text-[#1e3a8a] font-semibold italic">Auth. Sign. / Director</p>
+                <p className="text-[10px] font-bold tracking-[0.2em] text-[#1e3a8a]">AUTHORISED SIGNATORY</p>
               </div>
             </div>
           </div>
