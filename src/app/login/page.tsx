@@ -29,17 +29,21 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
 
-    const trimmedEmail = email.trim().toLowerCase();
+    let loginEmail = email.trim().toLowerCase();
 
-    if (!trimmedEmail || !password) {
+    if (!loginEmail || !password) {
       setError('Please enter both username and password.');
       return;
+    }
+
+    if (!loginEmail.includes('@')) {
+      loginEmail = `${loginEmail}@jeevankriti.org`;
     }
 
     setLoading(true);
 
     try {
-      await signIn(trimmedEmail, password);
+      await signIn(loginEmail, password);
       router.push('/dashboard/new');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
@@ -102,12 +106,12 @@ export default function LoginPage() {
           <div className="login-field">
             <input
               id="login-email"
-              type="email"
+              type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Username"
               required
-              autoComplete="email"
+              autoComplete="username"
               className="login-input"
             />
           </div>

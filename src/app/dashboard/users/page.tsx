@@ -6,16 +6,11 @@
 
 import { useState, useEffect, FormEvent } from 'react';
 import toast from 'react-hot-toast';
-import {
-  collection,
-  doc,
-  getDocs,
-  setDoc,
-  updateDoc,
-  serverTimestamp,
-} from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
-
+import app from '@/lib/firebase/config';
+import { initializeApp, deleteApp } from 'firebase/app';
+import { getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { AdminLayout } from '@/components/admin-layout';
 import { useAuth } from '@/components/auth-provider';
 
@@ -85,18 +80,32 @@ export default function UsersPage() {
       return;
     }
 
-    setAddingUser(true);
-    try {
-      const userRef = doc(db, USERS_COLLECTION, username.trim().toLowerCase());
-      await setDoc(userRef, {
-        username: username.trim().toLowerCase(),
-        fullName: fullName.trim(),
-        role: 'Staff',
-        status: 'Active',
-        lastLogin: '',
-        createdAt: new Date().toISOString(),
-        password: password, // In production, use Firebase Auth createUser
-      });
+      setAddingUser(true);
+      try {
+        const cleanedUsername = username.trim().toLowerCase();
+        
+        // 1. Create the user in Firebase Auth via a secondary app to not log out the admin
+        const secondaryAppName = `SecondaryApp-${Date.now()}`;
+        const secondaryApp = initializeApp(app.options, secondaryAppName);
+        const secondaryAuth = getAuth(secondaryApp);
+        
+        const emailForAuth = `${cleanedUsername}@jeevankriti.org`;
+        await createUserWithEmailAndPassword(secondaryAuth, emailForAuth, password);
+        await signOut(secondaryAuth);
+        await deleteApp(secondaryApp);
+
+        // 2. Save user details in Firestore
+        const userRef = doc(db, USERS_COLLECTION, cleanedUsername);
+        await setDoc(userRef, {
+          username: cleanedUsername,
+          fullName: fullName.trim(),
+          role: 'Staff',
+          status: 'Active',
+          lastLogin: '',
+          createdAt: new Date().toISOString(),
+          // We no longer strictly need to store the password, but keeping it for legacy reasons if requested
+          password: password, 
+        });
 
       setUsers((prev) => [
         ...prev,
