@@ -60,8 +60,8 @@ const NAV_ITEMS = [
     ),
   },
   {
-    label: 'Support — Quickipedia',
-    href: 'https://quickipedia.in',
+    label: 'Support — ZYROO STUDIO',
+    href: '#',
     external: true,
     icon: (
       <svg className="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -133,7 +133,7 @@ export function Sidebar() {
       {/* Footer */}
       <div className="sidebar-footer">
         <p>Developed by</p>
-        <p className="sidebar-footer-company">Quickipedia IT Innovations Pvt. Ltd.</p>
+        <p className="sidebar-footer-company">ZYROO STUDIO</p>
       </div>
     </aside>
   );
