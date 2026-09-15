@@ -1,8 +1,8 @@
 'use client';
 
 // ============================================================
-// Receipt Page — Clean receipt view without customer details
-// Same as preview but without the donor details table
+// Receipt Page — Clean, minimal receipt viewer
+// No banner, just a sleek floating toolbar + receipt
 // ============================================================
 
 import { useEffect, useState, useCallback, Suspense } from 'react';
@@ -60,22 +60,19 @@ function ReceiptPageContent() {
     setDownloading(true);
 
     try {
-      // Dynamic import to reduce initial bundle
       const html2canvas = (await import('html2canvas')).default;
       const jsPDF = (await import('jspdf')).default;
 
       const element = document.getElementById('receipt-page-template');
       if (!element) throw new Error('Receipt template not found');
 
-      // Capture the receipt as a canvas
       const canvas = await html2canvas(element, {
-        scale: 2, // Higher quality
+        scale: 2,
         useCORS: true,
         backgroundColor: '#ffffff',
         logging: false,
       });
 
-      // Create PDF (A4 size)
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
@@ -84,49 +81,29 @@ function ReceiptPageContent() {
       const imgWidth = pageWidth;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      // If the image is taller than one page, scale it to fit
       if (imgHeight > pageHeight) {
         const scale = pageHeight / imgHeight;
-        pdf.addImage(
-          imgData,
-          'PNG',
-          0,
-          0,
-          imgWidth * scale,
-          pageHeight
-        );
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth * scale, pageHeight);
       } else {
         pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
       }
 
-      // Save with receipt number and donor name
       const fileName = `${receipt.receiptNumber}_${receipt.donorName.replace(/[^a-zA-Z0-9]/g, '_')}_receipt.pdf`;
       pdf.save(fileName);
-
-      toast.success('PDF downloaded successfully!');
+      toast.success('PDF downloaded!');
     } catch (error) {
       console.error('PDF generation failed:', error);
-      toast.error('Failed to generate PDF. Please try again.');
+      toast.error('Failed to generate PDF.');
     } finally {
       setDownloading(false);
     }
   }, [receipt]);
 
-  /** Print the receipt */
-  function handlePrint() {
-    window.print();
-  }
-
-  /** Generate another receipt */
-  function handleNewReceipt() {
-    router.push('/receipts/new');
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-10 h-10 border-4 border-[#1e3a8a] border-t-transparent rounded-full animate-spin" />
           <p className="text-slate-500 text-sm">Loading receipt...</p>
         </div>
       </div>
@@ -138,89 +115,73 @@ function ReceiptPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/20 to-slate-100">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-100 shadow-sm no-print">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-emerald-600 rounded-xl flex items-center justify-center shadow-sm">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-sm font-bold text-slate-800">Donation Receipt</h1>
-              <p className="text-xs text-slate-500">{receipt.receiptNumber}</p>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Success Banner */}
-      <div className="bg-emerald-600 text-white no-print">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 rounded-full mb-3">
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+    <div className="min-h-screen bg-[#f0f2f5]">
+      {/* Floating Action Bar */}
+      <div className="no-print fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <div
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl shadow-2xl border border-white/20"
+          style={{
+            background: 'rgba(30, 58, 138, 0.92)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+          }}
+        >
+          {/* Receipt Info */}
+          <div className="flex items-center gap-2 pr-3 border-r border-white/20">
+            <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
+            <span className="text-white/90 text-sm font-medium hidden sm:inline">{receipt.receiptNumber}</span>
           </div>
-          <h2 className="text-xl font-bold mb-1">Donation Receipt</h2>
-          <p className="text-emerald-100 text-sm">
-            Receipt <strong>{receipt.receiptNumber}</strong> for <strong>{receipt.donorName}</strong>
-          </p>
-        </div>
-      </div>
 
-      {/* Action Buttons */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 -mt-4 mb-6 no-print">
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-4 flex flex-wrap items-center justify-center gap-3">
+          {/* Download PDF */}
           <button
             onClick={handleDownloadPDF}
             disabled={downloading}
-            className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-semibold text-sm rounded-xl transition-all shadow-md flex items-center gap-2"
+            className="flex items-center gap-2 px-4 py-2 bg-white text-[#1e3a8a] font-bold text-sm rounded-xl hover:bg-white/90 disabled:opacity-50 transition-all"
           >
             {downloading ? (
               <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Generating PDF...
+                <div className="w-4 h-4 border-2 border-[#1e3a8a] border-t-transparent rounded-full animate-spin" />
+                <span className="hidden sm:inline">Generating...</span>
               </>
             ) : (
               <>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
-                Download PDF
+                <span className="hidden sm:inline">Download PDF</span>
               </>
             )}
           </button>
 
+          {/* Print */}
           <button
-            onClick={handlePrint}
-            className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl transition-all flex items-center gap-2"
+            onClick={() => window.print()}
+            className="flex items-center gap-2 px-3 py-2 text-white/90 hover:bg-white/10 text-sm rounded-xl transition-all"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
             </svg>
-            Print
+            <span className="hidden sm:inline">Print</span>
           </button>
 
+          {/* New Receipt */}
           <button
-            onClick={handleNewReceipt}
-            className="px-5 py-2.5 bg-sky-50 hover:bg-sky-100 text-sky-700 font-semibold text-sm rounded-xl transition-all flex items-center gap-2"
+            onClick={() => router.push('/receipts/new')}
+            className="flex items-center gap-2 px-3 py-2 text-white/90 hover:bg-white/10 text-sm rounded-xl transition-all"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            New Receipt
+            <span className="hidden sm:inline">New</span>
           </button>
         </div>
       </div>
 
-      {/* Receipt Preview */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-12">
-        <div className="rounded-2xl overflow-hidden shadow-2xl border border-slate-200">
-          <ReceiptPageTemplate receipt={receipt} config={config} />
-        </div>
+      {/* Receipt — centered on page */}
+      <div className="max-w-[210mm] mx-auto px-4 sm:px-0 py-8 pb-24">
+        <ReceiptPageTemplate receipt={receipt} config={config} />
       </div>
     </div>
   );
@@ -231,7 +192,7 @@ export default function ReceiptPage() {
     <AuthGuard>
       <Suspense fallback={
         <div className="min-h-screen flex items-center justify-center bg-slate-50">
-          <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-10 h-10 border-4 border-[#1e3a8a] border-t-transparent rounded-full animate-spin" />
         </div>
       }>
         <ReceiptPageContent />
