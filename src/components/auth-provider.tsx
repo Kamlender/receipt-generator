@@ -6,7 +6,9 @@
 
 import React, { createContext, useContext, useEffect, useState, useRef, useCallback } from 'react';
 import { User } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import { onAuthChange, signOut } from '@/lib/firebase/auth';
+import { db } from '@/lib/firebase/config';
 import { toast } from 'react-hot-toast';
 
 interface AuthContextType {
@@ -20,6 +22,7 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 const INACTIVITY_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
+const ADMIN_EMAIL = 'admin@jeevankriti.org';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -51,8 +54,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user, handleLogout]);
 
   useEffect(() => {
-    const unsubscribe = onAuthChange((user) => {
-      setUser(user);
+    const unsubscribe = onAuthChange(async (firebaseUser) => {
+      if (firebaseUser) {
+        // Verify user still exists in panel_users (unless admin)
+        if (firebaseUser.email?.toLowerCase() !== ADMIN_EMAIL) {
+          const username = firebaseUser.email?.split('@')[0]?.toLowerCase() || '';
+          try {
+            const userDoc = await getDoc(doc(db, 'panel_users', username));
+            if (!userDoc.exists()) {
+              // User was deleted — sign out
+              await signOut();
+              toast.error('Your account has been removed. Contact the admin.', { duration: 5000 });
+              setUser(null);
+              setLoading(false);
+              return;
+            }
+            const data = userDoc.data();
+            if (data?.status === 'Disabled' || data?.status === 'Inactive') {
+              await signOut();
+              toast.error('Your account has been disabled. Contact the admin.', { duration: 5000 });
+              setUser(null);
+              setLoading(false);
+              return;
+            }
+          } catch (err) {
+            console.error('Error verifying user in Firestore:', err);
+          }
+        }
+        setUser(firebaseUser);
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
 
