@@ -147,22 +147,12 @@ export function ReceiptTemplate({ receipt, config }: ReceiptTemplateProps) {
             <div className="w-56 text-center flex flex-col items-center">
               <p className="text-[10px] font-bold mb-1">For JEEVANKRITI FOUNDATION</p>
               <p className="text-[11px] font-bold text-[#1e3a8a] italic mb-1" style={{ fontFamily: "'Georgia', 'Times New Roman', serif" }}>JEEVANKRITI FOUNDATION</p>
-              {activeConfig.signatureUrl ? (
-                <div className="h-10 flex items-center justify-center mb-0.5">
-                  <img 
-                    src={activeConfig.signatureUrl} 
-                    alt="Signature" 
-                    className="max-h-full w-auto object-contain"
-                  />
-                </div>
-              ) : (
-                <div 
-                  className="h-10 flex items-center justify-center text-[#1e3a8a] text-xl"
-                  style={{ fontFamily: "'Brush Script MT', 'Cedarville Cursive', cursive" }}
-                >
-                  Prince Kumar
-                </div>
-              )}
+              <div 
+                className="flex items-center justify-center text-[#1e3a8a] mb-0.5"
+                style={{ fontFamily: "'Brush Script MT', 'Segoe Script', 'Cedarville Cursive', cursive", fontSize: '22px', lineHeight: '1.2' }}
+              >
+                Prince Kumar
+              </div>
               <p className="text-[9px] text-[#1e3a8a] font-semibold italic mb-1">Auth. Sign. / Director</p>
               <div className="border-t border-gray-400 pt-2 w-full text-center mt-1">
                 <p className="text-[10px] font-bold tracking-[0.2em] text-[#1e3a8a]">AUTHORISED SIGNATORY</p>
