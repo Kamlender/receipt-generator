@@ -4,7 +4,7 @@
 // Receipt Generation Page — Multi-Step Form
 // ============================================================
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -37,12 +37,7 @@ function ReceiptFormContent() {
   const { user } = useAuth();
   const router = useRouter();
 
-  // Redirect Admin to /admin if they somehow land here
-  useEffect(() => {
-    if (user?.email === 'jeevanta@gmail.com') {
-      router.replace('/admin');
-    }
-  }, [user, router]);
+
 
   const {
     register,
