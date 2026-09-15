@@ -86,26 +86,10 @@ export function Sidebar() {
       <nav className="sidebar-nav">
         {NAV_ITEMS.map((item) => {
           const isActive =
-            !item.external &&
-            (pathname === item.href || pathname.startsWith(item.href.split('?')[0] + '/'));
+            pathname === item.href || pathname.startsWith(item.href.split('?')[0] + '/');
 
           // Special case: "Download Excel" should just highlight history
           const isDownload = item.href.includes('export=csv');
-
-          if (item.external) {
-            return (
-              <a
-                key={item.href}
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="sidebar-nav-link"
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </a>
-            );
-          }
 
           return (
             <Link
