@@ -1,16 +1,22 @@
 'use client';
 
+// ============================================================
+// Receipt Page Template — Same as ReceiptTemplate but WITHOUT
+// customer/donor details table. Watermark with diagonal
+// "JEEVANKRITI FOUNDATION" text repeated across the receipt.
+// ============================================================
+
 import { Receipt, NGOConfig } from '@/types/receipt';
 import { NGO_CONFIG as DEFAULT_NGO_CONFIG } from '@/config/ngo-config';
 import { PAYMENT_MODE_LABELS } from '@/types/receipt';
 import { amountToWords } from '@/lib/amount-to-words';
 
-interface ReceiptTemplateProps {
+interface ReceiptPageTemplateProps {
   receipt: Receipt;
   config?: NGOConfig;
 }
 
-export function ReceiptTemplate({ receipt, config }: ReceiptTemplateProps) {
+export function ReceiptPageTemplate({ receipt, config }: ReceiptPageTemplateProps) {
   const activeConfig = config || DEFAULT_NGO_CONFIG;
 
   // Format date as DD-MM-YYYY
@@ -29,9 +35,9 @@ export function ReceiptTemplate({ receipt, config }: ReceiptTemplateProps) {
   }).format(receipt.amount) + '/-';
 
   return (
-    <div id="receipt-template" className="receipt-v2-container">
-      {/* Diagonal Watermark */}
-      <div className="receipt-v2-watermark" />
+    <div id="receipt-page-template" className="receipt-v2-container">
+      {/* Diagonal Watermark — "JEEVANKRITI FOUNDATION" repeated diagonally */}
+      <div className="receipt-page-watermark" />
 
       {/* Double Border — Blue outer + Gold inner */}
       <div className="receipt-v2-border-outer">
@@ -106,41 +112,7 @@ export function ReceiptTemplate({ receipt, config }: ReceiptTemplateProps) {
             <span className="font-bold text-2xl tracking-wide">{formattedAmount}</span>
           </div>
 
-          {/* ═══════════════ DONOR DETAILS TABLE ═══════════════ */}
-          <div className="mb-6 px-4">
-            <table className="w-full text-[13px] border-collapse border border-gray-300">
-              <tbody>
-                <tr>
-                  <td className="border border-gray-300 p-2.5 font-bold w-1/3 text-[#1e3a8a] bg-gray-50/50">Donor name</td>
-                  <td className="border border-gray-300 p-2.5 text-gray-700">{receipt.donorName}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 p-2.5 font-bold text-[#1e3a8a] bg-gray-50/50">Contact no.</td>
-                  <td className="border border-gray-300 p-2.5 text-gray-700">{receipt.donorContact || 'N/A'}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 p-2.5 font-bold text-[#1e3a8a] bg-gray-50/50">Email address</td>
-                  <td className="border border-gray-300 p-2.5 text-gray-700">{receipt.donorEmail || 'N/A'}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 p-2.5 font-bold text-[#1e3a8a] bg-gray-50/50">Donor address</td>
-                  <td className="border border-gray-300 p-2.5 text-gray-700">{receipt.donorAddress || 'N/A'}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 p-2.5 font-bold text-[#1e3a8a] bg-gray-50/50">Donor PAN</td>
-                  <td className="border border-gray-300 p-2.5 text-gray-700">{receipt.donorPan || 'N/A'}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 p-2.5 font-bold text-[#1e3a8a] bg-gray-50/50">Payment mode</td>
-                  <td className="border border-gray-300 p-2.5 text-gray-700">{PAYMENT_MODE_LABELS[receipt.paymentMode]}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 p-2.5 font-bold text-[#1e3a8a] bg-gray-50/50">Transaction / Cheque no.</td>
-                  <td className="border border-gray-300 p-2.5 text-gray-700">{receipt.paymentReference || 'N/A'}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          {/* ═══════════════ DONOR DETAILS TABLE REMOVED ═══════════════ */}
 
           {/* ═══════════════ TAX EXEMPTION BOX ═══════════════ */}
           <div className="mx-4 border-[1.5px] border-dashed border-[#eab308] p-4 text-[12px] text-gray-700 bg-yellow-50/20 mb-8 rounded-sm text-center">
