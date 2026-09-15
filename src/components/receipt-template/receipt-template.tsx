@@ -149,7 +149,7 @@ export function ReceiptTemplate({ receipt, config }: ReceiptTemplateProps) {
             <div className="w-56 text-center flex flex-col items-center">
               <p className="text-[10px] font-bold mb-2">For JEEVANKRITI FOUNDATION</p>
               {activeConfig.signatureUrl ? (
-                <div style={{ mixBlendMode: 'screen' }} className="h-10 flex items-center justify-center mb-1">
+                <div className="h-10 flex items-center justify-center mb-1">
                   <img 
                     src={activeConfig.signatureUrl} 
                     alt="Signature" 
