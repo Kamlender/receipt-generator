@@ -6,7 +6,7 @@
 
 import { useState, useEffect, FormEvent } from 'react';
 import toast from 'react-hot-toast';
-import { collection, getDocs, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import app from '@/lib/firebase/config';
 import { initializeApp, deleteApp } from 'firebase/app';
@@ -151,6 +151,19 @@ export default function UsersPage() {
     }
   }
 
+  // Delete a user
+  async function handleDeleteUser(userId: string) {
+    if (!confirm(`Are you sure you want to delete user "${userId}"?`)) return;
+    try {
+      await deleteDoc(doc(db, USERS_COLLECTION, userId));
+      setUsers((prev) => prev.filter((u) => u.id !== userId));
+      toast.success('User deleted successfully.');
+    } catch (error) {
+      console.error('Failed to delete user:', error);
+      toast.error('Failed to delete user.');
+    }
+  }
+
   // Format date
   function formatDate(dateStr: string) {
     if (!dateStr) return '';
@@ -230,6 +243,7 @@ export default function UsersPage() {
                   <th>User</th>
                   <th>Status</th>
                   <th>Last login</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -243,6 +257,7 @@ export default function UsersPage() {
                   <td className="history-date">
                     {user?.metadata?.lastSignInTime ? formatDate(user.metadata.lastSignInTime) : 'N/A'}
                   </td>
+                  <td></td>
                 </tr>
                 {/* Dynamic users */}
                 {users.map((u) => (
@@ -253,6 +268,14 @@ export default function UsersPage() {
                     </td>
                     <td><span className="user-status-active">{u.status}</span></td>
                     <td className="history-date">{u.lastLogin ? formatDate(u.lastLogin) : 'N/A'}</td>
+                    <td>
+                      <button 
+                        onClick={() => handleDeleteUser(u.id)}
+                        className="action-btn action-delete"
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
