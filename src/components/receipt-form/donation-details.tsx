@@ -47,7 +47,9 @@ export function DonationDetails({ register, errors, watch }: DonationDetailsProp
             min="1"
             {...register('amount', { valueAsNumber: true })}
             placeholder="10000"
-            className={`w-full pl-10 pr-4 py-3 border rounded-xl text-slate-800 placeholder:text-slate-400 bg-slate-50/50 focus:bg-white transition-all text-lg font-medium ${
+            onWheel={(e) => (e.target as HTMLInputElement).blur()}
+            style={{ MozAppearance: 'textfield' }}
+            className={`w-full pl-10 pr-4 py-3 border rounded-xl text-slate-800 placeholder:text-slate-400 bg-slate-50/50 focus:bg-white transition-all text-lg font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
               errors.amount ? 'border-red-300 bg-red-50/30' : 'border-slate-200'
             }`}
           />
